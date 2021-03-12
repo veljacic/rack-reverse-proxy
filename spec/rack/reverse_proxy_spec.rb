@@ -423,7 +423,7 @@ RSpec.describe Rack::ReverseProxy do
           :headers => { "location" => "http://test.com/bar" }
         )
         get "http://example.com:3000/test/stuff"
-        expect(last_response.headers["location"]).to eq("http://example.com:3000/api/proxy/bar")
+        expect(last_response.headers["location"]).to eq("http://example.com:3000/api/proxy/http://test.com/bar")
       end
     end
 

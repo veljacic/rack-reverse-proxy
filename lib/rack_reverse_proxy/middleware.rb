@@ -14,7 +14,7 @@ module RackReverseProxy
       :x_forwarded_headers => true,
       :matching => :all,
       :replace_response_host => false,
-      :response_path_prefix => nil
+      :prefix_response_path => nil
     }
 
     def initialize(app = nil, &b)
