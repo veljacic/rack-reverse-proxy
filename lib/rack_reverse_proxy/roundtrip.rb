@@ -170,9 +170,15 @@ module RackReverseProxy
       )
     end
 
+    def format_path_prefix
+      return nil unless options[:prefix_response_path]
+
+      options[:prefix_response_path].gsub(/^\/?(.*?)\/?$/, '\1')
+    end
+
     def replace_location_header
       return unless need_replace_location?
-      rewrite_uri(response_location, source_request)
+      rewrite_uri(response_location, source_request, format_path_prefix)
       response_headers["Location"] = response_location.to_s
     end
 
@@ -229,10 +235,11 @@ module RackReverseProxy
       [["http", 80], ["https", 443]].include?([req.scheme, req.port])
     end
 
-    def rewrite_uri(uri, original_req)
+    def rewrite_uri(uri, original_req, path_prefix = nil)
       uri.scheme = original_req.scheme
       uri.host   = original_req.host
       uri.port   = original_req.port unless request_default_port?(original_req)
+      uri.path   = "/" + path_prefix + uri.path if path_prefix
     end
 
     def source_request

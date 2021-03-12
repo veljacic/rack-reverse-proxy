@@ -370,7 +370,8 @@ RSpec.describe Rack::ReverseProxy do
     describe "with replace response host turned on" do
       def app
         Rack::ReverseProxy.new(dummy_app) do
-          reverse_proxy "/test", "http://example.com/", :replace_response_host => true
+          reverse_proxy "/test", "http://example.com/"
+          reverse_proxy_options :replace_response_host => true
         end
       end
 
@@ -406,6 +407,23 @@ RSpec.describe Rack::ReverseProxy do
         )
         get "http://example.com/test/stuff"
         expect(last_response.headers["location"]).to eq("/bar")
+      end
+    end
+
+    describe "with replace response host turned on and host_path_prefix" do
+      def app
+        Rack::ReverseProxy.new(dummy_app) do
+          reverse_proxy "/test", "http://example.com/"
+          reverse_proxy_options :replace_response_host => true, :prefix_response_path => "/api/proxy/"
+        end
+      end
+
+      it "prefixes path with prefix" do
+        stub_request(:get, "http://example.com/test/stuff").to_return(
+          :headers => { "location" => "http://test.com/bar" }
+        )
+        get "http://example.com:3000/test/stuff"
+        expect(last_response.headers["location"]).to eq("http://example.com:3000/api/proxy/bar")
       end
     end
 
