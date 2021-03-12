@@ -90,6 +90,8 @@ Right now if more than one rule matches any given route, it throws an exception 
 * `:x_forwarded_headers` sets up proper `X-Forwarded-*` headers. Default: true.
 * `:stripped_headers` Array of headers that should be stripped before forwarding reqeust. Default: nil.
   e.g. `stripped_headers: ["Accept-Encoding", "Foo-Bar"]`
+* `replace_response_host` replaces host in `Location` response header with the host specified in proxy_options
+* `prefix_response_path` works together with `replace_response_host`. Adds prefix to the path in the response `Location` header. This enables browser to follow Location url through the proxy again. 
 
 If `reverse_proxy_options` is invoked multiple times, the invocations will have a commulative effect,
 only overwritting the values which they specify. Example of how this could be useful:
