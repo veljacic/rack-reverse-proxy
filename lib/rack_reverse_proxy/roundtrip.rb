@@ -236,7 +236,7 @@ module RackReverseProxy
     end
 
     def rewrite_uri(uri, original_req, path_prefix = nil)
-      uri.path = "/" + path_prefix + "/" + uri.to_s if path_prefix
+      uri.path = "/" + path_prefix + "/" + uri.to_s if path_prefix && target_response.status == 303
       uri.scheme = original_req.scheme
       uri.host   = original_req.host
       uri.port   = original_req.port unless request_default_port?(original_req)

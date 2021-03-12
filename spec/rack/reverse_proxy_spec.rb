@@ -420,7 +420,7 @@ RSpec.describe Rack::ReverseProxy do
 
       it "prefixes path with prefix" do
         stub_request(:get, "http://example.com/test/stuff").to_return(
-          :headers => { "location" => "http://test.com/bar" }
+          :headers => { "location" => "http://test.com/bar" }, :status => 303
         )
         get "http://example.com:3000/test/stuff"
         expect(last_response.headers["location"]).to eq("http://example.com:3000/api/proxy/http://test.com/bar")
